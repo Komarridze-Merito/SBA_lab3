@@ -8,8 +8,8 @@ import json
 
 app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 
-@app.route(route="SBAlab3fa")
-def SBAlab3fa(req: func.HttpRequest) -> func.HttpResponse:
+@app.route(route="lab3")
+def lab3(req: func.HttpRequest) -> func.HttpResponse:
     try:
         req_body = req.get_json()
         length = req_body.get('length')
