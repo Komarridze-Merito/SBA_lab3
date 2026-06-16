@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lab 3 - Keygen</title>
+    <style>
+        body { font-family: 'Segoe UI', sans-serif; display: flex; justify-content: center; padding: 20px; background: #f4f4f9; }
+        .card { background: white; padding: 25px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 320px; }
+        select, input, button { width: 100%; padding: 12px; margin: 8px 0; border: 1px solid #ddd; border-radius: 5px; box-sizing: border-box; }
+        button { background: #0078d4; color: white; border: none; cursor: pointer; font-weight: bold; }
+        button:hover { background: #005a9e; }
+        #result { font-weight: bold; color: #0078d4; text-align: center; margin-top: 15px; font-size: 1.1em; }
+        .version { color: #888; font-size: 0.8em; text-align: center; margin-bottom: 15px; }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <div class="version">Version 2 (Azure API Ready)</div>
+        <h2>Keygen</h2>
+        
+        <select id="length">
+            <option value="64">64bit</option>
+            <option value="128">128bit</option>
+            <option value="256">256bit</option>
+            <option value="512">512bit</option>
+        </select>
+
+
+        <button onclick="generate()">Generate key</button>
+        <p id="result"></p>
+    </div>
+
+    <script>
+        async function generate() {
+            const len = document.getElementById('length').value;
+            
+            // Mapowanie danych na format oczekiwany przez Python Function App
+            let data = {};
+            if (len === '64') data = { length: 64 };
+            else if (len === '128') data = { length: 128 };
+            else if (len === '256') data = { length: 256 };
+            else if (len === '512') data = { length: 512 };
+
+            const apiUrl = 'https://construction-g6axaybphmf2bgdt.polandcentral-01.azurewebsites.net/api/lab3';
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ data: data })
+                });
+
+                if (!response.ok) throw new Error("Server error");
+
+                const result = await response.json();
+                document.getElementById('result').innerText = "Your key is: " + result.key;
+            } catch (error) {
+                document.getElementById('result').innerText = "Error connecting to the API.";
+                console.error("Error details:", error);
+            }
+        }
+    </script>
+</body>
+</html>
