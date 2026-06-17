@@ -12,10 +12,10 @@ app = func.FunctionApp(http_auth_level=func.AuthLevel.ANONYMOUS)
 def sbageneratekey(req: func.HttpRequest) -> func.HttpResponse:
     try:
         req_body = req.get_json()
-        length = req_body.get('length')
+        data = req_body.get('data')
 
 
-        key = ''.join(choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(length))
+        key = ''.join(choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(data['length']))
 
 
         return func.HttpResponse(
